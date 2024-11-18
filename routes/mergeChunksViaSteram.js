@@ -54,6 +54,10 @@ router.post('/', async (req, res) => {
 
             //tu jest klu - createReadStream
             const readStream = fs.createReadStream(filePath);
+            /*
+                Opcja { end: false } w pipe
+                Zapobiega automatycznemu zamknięciu writeStream po zakończeniu jednego strumienia odczytu,
+                umożliwiając dalsze pisanie.*/
             readStream.pipe(writeStream, { end: false });
 
             await new Promise((resolve, reject) => {
