@@ -52,6 +52,7 @@ router.post('/', async (req, res) => {
             const filePath = path.join(chunksDir, file);
             console.log(`Łączenie pliku: ${filePath}`);
 
+            //tu jest klu - createReadStream
             const readStream = fs.createReadStream(filePath);
             readStream.pipe(writeStream, { end: false });
 
