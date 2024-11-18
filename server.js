@@ -4,6 +4,7 @@ const cors = require('cors');
 
 const uploadRoute = require('./routes/upload');
 const mergeChunks = require('./routes/mergeChunks');
+const mergeChunksViaStream = require('./routes/mergeChunksViaSteram');
 const clearChunks = require('./routes/clearChunks');
 
 const app = express();
@@ -24,6 +25,7 @@ app.use(cors(corsOptions));
 app.use('/upload', uploadRoute);
 
 app.use('/merge-video', mergeChunks);
+app.use('/merge-video-via-stream', mergeChunksViaStream);
 
 app.use('/clear-chunks', clearChunks);
 

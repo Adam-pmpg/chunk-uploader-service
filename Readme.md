@@ -43,3 +43,7 @@ DELETE http://localhost:3000/clear-chunks
 ###POST | scalenie poszczególnych przyczynków video, w jeden plik
 
 POST http://localhost:3000/merge-video
+
+###POST /merge-video-via-stream
+
+duże pliki, np. 5,7GB nie zawieszały kompa, próbuję innego podejścia - strumienioweg
