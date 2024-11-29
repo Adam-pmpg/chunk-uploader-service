@@ -5,6 +5,7 @@ output/
 .vscode/
 .idea/
 .github/
+.env
 
 # Pliki i foldery z danymi Docker (np. woluminy, bazy danych itp.)
 docker-data/
