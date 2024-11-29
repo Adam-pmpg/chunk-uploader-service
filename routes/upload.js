@@ -4,6 +4,7 @@ const multer = require('multer');
 const router = express.Router();
 const fs = require('fs');
 const path = require('path');
+const crypto = require('crypto');
 
 const storage = multer.memoryStorage();
 const upload = multer({
@@ -11,20 +12,39 @@ const upload = multer({
     limits: { fileSize: 11 * 1024 * 1024 } // Limit 11 MB
 });
 
+function calculateHash(buffer) {
+    const hash = crypto.createHash('sha256');
+    hash.update(buffer);
+    return hash.digest('hex');
+}
 router.post('/', upload.single('file'), (req, res) => {
-    const { chunkIndex, totalChunks } = req.body;
+    const { chunkIndex, totalChunks, hashChunk } = req.body;
     const file = req.file ? req.file : null;
-    const { originalname, size } = file ? file : 'brak video';
+
+    if (!req.file) {
+        return res.status(400).json({ error: 'Brak przesłanego pliku.' });
+    }
+
+    const { originalname, size, buffer } = file;
+
+    const calculatedHash = calculateHash(buffer);
 
     console.log({
         originalname,
         "dane": req.body,
+        "daneJSON": JSON.stringify(req.body),
         "plik:": file,
-    })
+        "hashChunk z CMS": hashChunk,
+        "wyliczone w API": calculatedHash,
+    });
+
+    if (calculatedHash !== hashChunk) {
+        return res.status(400).json({ error: 'Suma kontrolna przesłanego pliku, nie zgadza się!' });
+    }
 
     const chunksDir = path.join(__dirname, '../chunks');
     if (!fs.existsSync(chunksDir)) {
-        fs.mkdirSync(chunksDir); // Tworzy folder, jeśli nie istnieje
+        fs.mkdirSync(chunksDir);
     }
     const chunkPath = path.join(chunksDir, `chunk_${chunkIndex}__${originalname}`);
     // Zapis fragmentu na dysku
