@@ -17,19 +17,21 @@ const port = 3000;
 app.use(express.json({ limit: '100mb' }));
 app.use(express.urlencoded({ limit: '100mb', extended: true }));
 
-// Umożliwienie CORS dla wszystkich domen
-const corsOptions = {
-    origin: '*',
-    methods: ['POST, GET, DELETE'],
-    allowedHeaders: ['Content-Type'],
-    credentials: true
-};
-app.use(cors(corsOptions));
+// Umożliwienie CORS dla wszystkich domen, ale tylko dla środowiska developerskiego
+if (process.env.ENV_IS_PRODUCTION !== 'true') {
+    const corsOptions = {
+        origin: '*',
+        methods: ['POST, GET, DELETE'],
+        allowedHeaders: ['Content-Type'],
+        credentials: true
+    };
+    app.use(cors(corsOptions));
+}
 
 app.use('/auth', authRoutes);
 
 // Rejestracja trasy upload
-app.use('/upload', authenticateJWT,  uploadRoute);
+app.use('/upload', authenticateJWT, uploadRoute);
 
 app.use('/merge-video', authenticateJWT, mergeChunks);
 app.use('/merge-video-via-stream', authenticateJWT, mergeChunksViaStream);
@@ -38,7 +40,7 @@ app.use('/clear-chunks', clearChunks);
 
 // Endpoint główny
 app.get('/', (req, res) => {
-    res.send('<h1>Hello, welcome to the Video API v1!</h1>');  // Wyświetlamy powitanie
+    res.status(200);
 });
 
 app.get('/about', (req, res) => {
