@@ -26,13 +26,10 @@ router.post('/', async (req, res) => {
         return res.status(400).send('Brak plików do scalenia.');
     }
 
-    console.log('Znalezione pliki do scalania:', files);
-
     // Parsuję nazwę pliku, bez chunk_0, chunk_1...
     const firstFile = files[0];
     const parsedFileName = firstFile.replace(/^chunk_0__/, '');
     const outputFile = path.join(outputDir, `${parsedFileName}`);
-    console.log(`Plik wynikowy: ${outputFile}`);
 
     const writeStream = fs.createWriteStream(outputFile);
 
@@ -42,7 +39,6 @@ router.post('/', async (req, res) => {
     });
 
     writeStream.on('finish', () => {
-        console.log('Scalanie plików zakończone.');
         res.status(200).send(`Pliki zostały pomyślnie scalone w ${parsedFileName}`);
     });
 
@@ -50,8 +46,6 @@ router.post('/', async (req, res) => {
     const mergeFiles = async () => {
         for (const file of files) {
             const filePath = path.join(chunksDir, file);
-            console.log(`Łączenie pliku: ${filePath}`);
-
             //tu jest klu - createReadStream
             const readStream = fs.createReadStream(filePath);
             /*

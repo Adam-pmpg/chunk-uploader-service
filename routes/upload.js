@@ -26,17 +26,7 @@ router.post('/', upload.single('file'), (req, res) => {
     }
 
     const { originalname, size, buffer } = file;
-
     const calculatedHash = calculateHash(buffer);
-
-    console.log({
-        originalname,
-        "dane": req.body,
-        "daneJSON": JSON.stringify(req.body),
-        "plik:": file,
-        "hashChunk z CMS": hashChunk,
-        "wyliczone w API": calculatedHash,
-    });
 
     if (calculatedHash !== hashChunk) {
         return res.status(400).json({ error: 'Suma kontrolna przesłanego pliku, nie zgadza się!' });
@@ -54,7 +44,6 @@ router.post('/', upload.single('file'), (req, res) => {
 
             return res.status(500).json({ error: 'Błąd podczas zapisywania fragmentu.' });
         }
-        console.log(`Fragment ${chunkIndex} zapisany.`);
 
         res.status(200).json({
             chunkIndex: chunkIndex,

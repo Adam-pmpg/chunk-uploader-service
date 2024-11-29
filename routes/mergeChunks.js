@@ -25,12 +25,10 @@ router.post('/', async (req, res) => {
     if (files.length === 0) {
         return res.status(400).send('Brak plików do scalenia.');
     }
-    console.log('Znalezione pliki do scalania:', files);
 
     //Parsuję nazwę pliku, bez chunk_0, chunk_1...
     const firstFile = files[0];
     const parsedFileName = firstFile.replace(/^chunk_0__/, '');
-    console.log(parsedFileName);
 
     // Otwórz strumień do zapisu finalnego pliku
     const outputFile = path.join(outputDir, `${parsedFileName}`);
@@ -42,15 +40,12 @@ router.post('/', async (req, res) => {
     });
 
     writeStream.on('finish', () => {
-        console.log('Scalanie plików zakończone.');
         res.status(200).send(`Pliki zostały pomyślnie scalone w ${parsedFileName}`);
     });
 
     // Łączenie fragmentów
     files.forEach(file => {
         const filePath = path.join(chunksDir, file);
-        console.log(`Łączenie pliku: ${filePath}`);
-
         // Odczytaj każdy fragment jako binarny buffer
         const chunk = fs.readFileSync(filePath);
 
