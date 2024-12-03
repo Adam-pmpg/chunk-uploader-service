@@ -37,8 +37,8 @@ router.post('/', upload.single('file'), (req, res) => {
         fs.mkdirSync(chunksDir);
     }
     //mechanizm podfolderów
-    const fileBaseName = path.parse(originalname).name;
-    const fileDir = path.join(chunksDir, fileBaseName);
+    const fileWithoutExtension = path.parse(originalname).name;
+    const fileDir = path.join(chunksDir, fileWithoutExtension);
     if (!fs.existsSync(fileDir)) {
         fs.mkdirSync(fileDir);
     }
@@ -56,7 +56,8 @@ router.post('/', upload.single('file'), (req, res) => {
             chunkIndex: chunkIndex,
             totalChunks: totalChunks,
             progress: (Number(chunkIndex) + 1) / Number(totalChunks) * 100, // Procent ukończenia
-            file: file.originalname
+            file: file.originalname,
+            fileWithoutExtension
         });
     });
 });
