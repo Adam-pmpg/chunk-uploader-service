@@ -5,12 +5,20 @@ const path = require('path');
 const router = express.Router();
 
 // Endpoint do scalania plików wideo
-router.post('/', async (req, res) => {
-    const chunksDir = path.join(__dirname, '../chunks');
-    const outputDir = path.join(__dirname, '../output');
-
+router.post('/:folderId', async (req, res) => {
+    const folderId = req.params.folderId;
+    const chunksDir = path.join(__dirname, '../chunks', folderId);
+    const outputDir = path.join(__dirname, '../output', folderId);
+console.log({
+    a11: '*****',
+    chunksDir,
+    outputDir
+})
     if (!fs.existsSync(outputDir)) {
         fs.mkdirSync(outputDir);
+    }
+    if (!fs.existsSync(chunksDir)) {
+        return res.status(400).send('Taki Folder nie istnieje.');
     }
 
     // Pobierz listę fragmentów, posortowaną po nazwie
