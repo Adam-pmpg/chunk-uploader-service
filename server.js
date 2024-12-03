@@ -34,11 +34,11 @@ app.use('/video/upload', authenticateJWT, uploadRoute);
 
 app.use('/video/merge', authenticateJWT, mergeChunksViaStream);
 
-app.use('/clear-chunks', clearChunks);
+app.use('/video/clear-chunks', clearChunks);
 
 // Endpoint główny
 app.get('/', (req, res) => {
-    res.status(200);
+    res.status(200).send();
 });
 
 app.get('/about', (req, res) => {
