@@ -30,9 +30,9 @@ if (process.env.ENV_IS_PRODUCTION !== 'true') {
 app.use('/auth', authRoutes);
 
 // Rejestracja trasy upload
-app.use('/upload', authenticateJWT, uploadRoute);
+app.use('/video/upload', authenticateJWT, uploadRoute);
 
-app.use('/merge-video-via-stream', authenticateJWT, mergeChunksViaStream);
+app.use('/video/merge', authenticateJWT, mergeChunksViaStream);
 
 app.use('/clear-chunks', clearChunks);
 
