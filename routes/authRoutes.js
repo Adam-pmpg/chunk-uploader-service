@@ -13,9 +13,8 @@ router.post('/login', (req, res) => {
             id: 1,
             username: envUsername,
         };
-        // Generujemy token dla użytkownika
         const token = generateToken(user);
-        // Zwracamy token w odpowiedzi
+
         return res.json({ token });
     }
 
