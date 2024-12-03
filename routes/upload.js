@@ -13,25 +13,23 @@ const upload = multer({
 });
 
 function calculateHash(buffer) {
-    const hash = crypto.createHash('sha256');
+    const hash = crypto.createHash('sha1');
     hash.update(buffer);
     return hash.digest('hex');
 }
 router.post('/', upload.single('file'), (req, res) => {
-    const { chunkIndex, totalChunks, hashChunk } = req.body;
+    const { chunkIndex, totalChunks, hashChunk, checksumEnabled } = req.body;
     const file = req.file ? req.file : null;
-
     if (!req.file) {
         return res.status(400).json({ error: 'Brak przesłanego pliku.' });
     }
-
     const { originalname, buffer } = file;
-    const calculatedHash = calculateHash(buffer);
-
-    if (calculatedHash !== hashChunk) {
-        return res.status(400).json({ error: 'Suma kontrolna przesłanego pliku, nie zgadza się!' });
+    if (checksumEnabled === 'true') {
+        const calculatedHash = calculateHash(buffer);
+        if (calculatedHash !== hashChunk) {
+            return res.status(400).json({ error: 'Suma kontrolna przesłanego pliku, nie zgadza się!' });
+        }
     }
-
     const chunksDir = path.join(__dirname, '../chunks');
     if (!fs.existsSync(chunksDir)) {
         fs.mkdirSync(chunksDir);
@@ -45,7 +43,7 @@ router.post('/', upload.single('file'), (req, res) => {
 
     const chunkPath = path.join(fileDir, `chunk_${chunkIndex}__${originalname}`);
     // Zapis fragmentu na dysku
-    fs.writeFile(chunkPath, file.buffer, (err) => {
+    fs.writeFile(chunkPath, buffer, (err) => {
         if (err) {
             console.error('Błąd podczas zapisywania fragmentu:', err);
 
