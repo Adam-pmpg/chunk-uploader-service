@@ -25,7 +25,7 @@ router.post('/', upload.single('file'), (req, res) => {
         return res.status(400).json({ error: 'Brak przesłanego pliku.' });
     }
 
-    const { originalname, size, buffer } = file;
+    const { originalname, buffer } = file;
     const calculatedHash = calculateHash(buffer);
 
     if (calculatedHash !== hashChunk) {
@@ -36,7 +36,14 @@ router.post('/', upload.single('file'), (req, res) => {
     if (!fs.existsSync(chunksDir)) {
         fs.mkdirSync(chunksDir);
     }
-    const chunkPath = path.join(chunksDir, `chunk_${chunkIndex}__${originalname}`);
+    //mechanizm podfolderów
+    const fileBaseName = path.parse(originalname).name;
+    const fileDir = path.join(chunksDir, fileBaseName);
+    if (!fs.existsSync(fileDir)) {
+        fs.mkdirSync(fileDir);
+    }
+
+    const chunkPath = path.join(fileDir, `chunk_${chunkIndex}__${originalname}`);
     // Zapis fragmentu na dysku
     fs.writeFile(chunkPath, file.buffer, (err) => {
         if (err) {
