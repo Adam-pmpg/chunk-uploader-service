@@ -9,18 +9,12 @@ router.post('/:folderId', async (req, res) => {
     const folderId = req.params.folderId;
     const chunksDir = path.join(__dirname, '../chunks', folderId);
     const outputDir = path.join(__dirname, '../output', folderId);
-console.log({
-    a11: '*****',
-    chunksDir,
-    outputDir
-})
-    if (!fs.existsSync(outputDir)) {
-        fs.mkdirSync(outputDir);
-    }
     if (!fs.existsSync(chunksDir)) {
         return res.status(400).send('Taki Folder nie istnieje.');
     }
-
+    if (!fs.existsSync(outputDir)) {
+        fs.mkdirSync(outputDir);
+    }
     // Pobierz listę fragmentów, posortowaną po nazwie
     let files = fs.readdirSync(chunksDir)
         .filter(file => (file.startsWith('chunk_') && (file.endsWith('.mp4') || file.endsWith('.wmv'))))
