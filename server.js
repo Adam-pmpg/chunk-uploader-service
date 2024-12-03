@@ -8,8 +8,7 @@ const authenticateJWT = require('./middleware/authenticateJWT');
 
 const authRoutes = require('./routes/authRoutes');
 const uploadRoute = require('./routes/upload');
-const mergeChunks = require('./routes/mergeChunks');
-const mergeChunksViaStream = require('./routes/mergeChunksViaSteram');
+const mergeChunksViaStream = require('./routes/mergeChunksViaStream');
 const clearChunks = require('./routes/clearChunks');
 
 const app = express();
@@ -33,7 +32,6 @@ app.use('/auth', authRoutes);
 // Rejestracja trasy upload
 app.use('/upload', authenticateJWT, uploadRoute);
 
-app.use('/merge-video', authenticateJWT, mergeChunks);
 app.use('/merge-video-via-stream', authenticateJWT, mergeChunksViaStream);
 
 app.use('/clear-chunks', clearChunks);
