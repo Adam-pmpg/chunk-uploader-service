@@ -40,7 +40,7 @@ router.post('/:folderId', async (req, res) => {
     });
 
     writeStream.on('finish', () => {
-        res.status(200).json({message:`Pliki zostały pomyślnie scalone w ${parsedFileName}`});
+        res.status(200).json({message:`Pliki zostały pomyślnie scalone - ${parsedFileName}`});
     });
 
     // Funkcja pomocnicza do łączenia plików strumieniowo
