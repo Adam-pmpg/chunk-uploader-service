@@ -1,5 +1,5 @@
 {
-  "name": "video-api",
+  "name": "chunk-uploader-service",
   "version": "1.0.4",
   "main": "server.js",
   "scripts": {

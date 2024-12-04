@@ -5,14 +5,16 @@ const path = require('path');
 const router = express.Router();
 
 // Endpoint do scalania plików wideo
-router.post('/', async (req, res) => {
-    const chunksDir = path.join(__dirname, '../chunks');
-    const outputDir = path.join(__dirname, '../output');
-
+router.post('/:folderId', async (req, res) => {
+    const folderId = req.params.folderId;
+    const chunksDir = path.join(__dirname, '../chunks', folderId);
+    const outputDir = path.join(__dirname, '../output', folderId);
+    if (!fs.existsSync(chunksDir)) {
+        return res.status(400).json({error:'Taki Folder nie istnieje.'});
+    }
     if (!fs.existsSync(outputDir)) {
         fs.mkdirSync(outputDir);
     }
-
     // Pobierz listę fragmentów, posortowaną po nazwie
     let files = fs.readdirSync(chunksDir)
         .filter(file => (file.startsWith('chunk_') && (file.endsWith('.mp4') || file.endsWith('.wmv'))))
@@ -23,7 +25,7 @@ router.post('/', async (req, res) => {
         });
 
     if (files.length === 0) {
-        return res.status(400).send('Brak plików do scalenia.');
+        return res.status(400).json({error:'Brak plików do scalenia.'});
     }
 
     // Parsuję nazwę pliku, bez chunk_0, chunk_1...
@@ -34,19 +36,18 @@ router.post('/', async (req, res) => {
     const writeStream = fs.createWriteStream(outputFile);
 
     writeStream.on('error', (error) => {
-        console.error('Błąd podczas zapisu:', error);
-        res.status(500).send('Błąd podczas scalania plików.');
+        res.status(500).json({error:'Błąd podczas scalania plików.'});
     });
 
     writeStream.on('finish', () => {
-        res.status(200).send(`Pliki zostały pomyślnie scalone w ${parsedFileName}`);
+        res.status(200).json({message:`Pliki zostały pomyślnie scalone w ${parsedFileName}`});
     });
 
     // Funkcja pomocnicza do łączenia plików strumieniowo
     const mergeFiles = async () => {
         for (const file of files) {
             const filePath = path.join(chunksDir, file);
-            //tu jest klu - createReadStream
+            //tu jest klu, dla dużych plików - createReadStream
             const readStream = fs.createReadStream(filePath);
             /*
                 Opcja { end: false } w pipe
@@ -68,8 +69,7 @@ router.post('/', async (req, res) => {
     try {
         await mergeFiles();
     } catch (error) {
-        console.error('Błąd podczas scalania plików:', error);
-        res.status(500).send('Błąd podczas scalania plików.');
+        res.status(500).json({error:'Błąd podczas scalania plików.'});
     }
 });
 

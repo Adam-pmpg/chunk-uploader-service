@@ -11,28 +11,44 @@ const outputDir = path.join(__dirname, '../output');
 // Funkcja do usuwania plików w folderze
 const clearFolder = (dir) => {
     return new Promise((resolve, reject) => {
-        fs.readdir(dir, (err, files) => {
+        fs.readdir(dir, { withFileTypes: true }, (err, entries) => {
             if (err) {
                 return reject(`Błąd odczytu folderu ${dir}: ${err}`);
             }
-
-            // Jeśli folder jest pusty, po prostu kończymy
-            if (files.length === 0) {
+            //czy folder pusty
+            if (entries.length === 0) {
                 return resolve(`Folder ${dir} jest już pusty.`);
             }
 
-            // Usuwamy pliki jeden po drugim
-            let deletionPromises = files.map(file => {
-                const filePath = path.join(dir, file);
-                return new Promise((resolve, reject) => {
-                    fs.unlink(filePath, (err) => {
-                        if (err) {
-                            reject(`Błąd usuwania pliku ${filePath}: ${err}`);
-                        } else {
-                            resolve(`Usunięto plik: ${filePath}`);
-                        }
+            // Usuwamy pliki lub podfoldery
+            let deletionPromises = entries.map(entry => {
+                const entryPath = path.join(dir, entry.name);
+
+                if (entry.isDirectory()) {
+                    // Rekurencyjnie usuwamy podfolder
+                    return clearFolder(entryPath).then(() => {
+                        return new Promise((resolve, reject) => {
+                            fs.rmdir(entryPath, (err) => {
+                                if (err) {
+                                    reject(`Błąd usuwania folderu ${entryPath}: ${err}`);
+                                } else {
+                                    resolve(`Usunięto folder: ${entryPath}`);
+                                }
+                            });
+                        });
                     });
-                });
+                } else {
+                    // Usuwamy plik
+                    return new Promise((resolve, reject) => {
+                        fs.unlink(entryPath, (err) => {
+                            if (err) {
+                                reject(`Błąd usuwania pliku ${entryPath}: ${err}`);
+                            } else {
+                                resolve(`Usunięto plik: ${entryPath}`);
+                            }
+                        });
+                    });
+                }
             });
 
             // Czekamy na zakończenie usuwania wszystkich plików
