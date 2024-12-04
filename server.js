@@ -13,6 +13,7 @@ const clearChunks = require('./routes/clearChunks');
 
 const app = express();
 const port = process.env.HOST_PORT;
+const host = process.env.HOST;
 
 app.use(express.json({ limit: '100mb' }));
 app.use(express.urlencoded({ limit: '100mb', extended: true }));
@@ -37,12 +38,12 @@ app.use((err, req, res, next) => {
     if (err.message) {
         if (err.message.includes('CORS policy')) {
             return res.status(403).json({
-                error: 'Forbidden',
+                error: 'Forbidden #101',
                 message: err.message
             });
         } else if (err.message.includes('Not allowed by CORS')) {
             return res.status(403).json({
-                error: 'Forbidden',
+                error: 'Forbidden #102',
                 message: err.message
             });
         }
@@ -58,6 +59,6 @@ app.use((err, req, res, next) => {
     });
 });
 
-app.listen(port, () => {
-    console.log(`Server running at http://localhost:${port}`);
+app.listen(port, host, () => {
+    console.log(`Server running at http://${host}:${port}`);
 });
