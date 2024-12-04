@@ -34,10 +34,6 @@ app.get('/about', (req, res) => {
 
 // Globalny handler błędów CORS
 app.use((err, req, res, next) => {
-    console.log({
-        a11: '*******',
-        er: err.message
-    })
     if (err.message) {
         if (err.message.includes('CORS policy')) {
             return res.status(403).json({
