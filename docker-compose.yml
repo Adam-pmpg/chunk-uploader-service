@@ -2,7 +2,7 @@ services:
   chunk-uploader-service:
     build: .
     ports:
-      - "3000:3000"
+      - "${HOST_PORT}:${CONTAINER_PORT}"
     volumes:
       - .:/app
       - ./chunks:/app/chunks

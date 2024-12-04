@@ -19,7 +19,8 @@ COPY . .
 RUN npm install
 
 # Otwieramy port 3000, na którym nasza aplikacja będzie działać
-EXPOSE 3000
+# przeniosę to, jako mapowanie do docker-compose
+# EXPOSE 3000
 
 # Uruchamiamy aplikację za pomocą nodemon
 # CMD ["nodemon", "server.js"]

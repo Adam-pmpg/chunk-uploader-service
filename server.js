@@ -12,7 +12,7 @@ const mergeChunksViaStream = require('./routes/mergeChunksViaStream');
 const clearChunks = require('./routes/clearChunks');
 
 const app = express();
-const port = 3000;
+const port = process.env.HOST_PORT;
 
 app.use(express.json({ limit: '100mb' }));
 app.use(express.urlencoded({ limit: '100mb', extended: true }));
@@ -57,6 +57,7 @@ app.use((err, req, res, next) => {
         message: err.message
     });
 });
+
 app.listen(port, () => {
     console.log(`Server running at http://localhost:${port}`);
 });
