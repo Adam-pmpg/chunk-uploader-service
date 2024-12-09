@@ -12,7 +12,7 @@ const mergeChunksViaStream = require('./routes/mergeChunksViaStream');
 const clearChunks = require('./routes/clearChunks');
 
 const app = express();
-const port = process.env.HOST_PORT;
+const port = process.env.CHUNK_SERVICE_HOST_PORT;
 const host = process.env.HOST;
 
 app.use(express.json({ limit: '100mb' }));
