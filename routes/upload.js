@@ -41,7 +41,7 @@ router.post('/', upload.single('file'), (req, res) => {
         fs.mkdirSync(fileDir);
     }
 
-    const chunkPath = path.join(fileDir, `chunk_${chunkIndex}__${originalname}`);
+    const chunkPath = path.join(fileDir, `chunk_${String(chunkIndex).padStart(3, '0')}__${originalname}`);
     // Zapis fragmentu na dysku
     fs.writeFile(chunkPath, buffer, (err) => {
         if (err) {
