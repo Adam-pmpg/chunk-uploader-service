@@ -22,6 +22,10 @@ RUN npm install
 # przeniosę to, jako mapowanie do docker-compose
 # EXPOSE 3000
 
+# Ustawiamy użytkownika node na domyślnego
+# gdyż w kodzie, tworzę foldery, jeśli nie istnieją, i dostawały użytkownika root
+USER node
+
 # Uruchamiamy aplikację za pomocą nodemon
 # CMD ["nodemon", "server.js"]
 CMD ["npm", "run", "dev"]

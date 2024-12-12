@@ -30,7 +30,7 @@ router.post('/:folderId', async (req, res) => {
 
     // Parsuję nazwę pliku, bez chunk_0, chunk_1...
     const firstFile = files[0];
-    const parsedFileName = firstFile.replace(/^chunk_0__/, '');
+    const parsedFileName = firstFile.replace(/^chunk_000__/, '');
     const outputFile = path.join(outputDir, `${parsedFileName}`);
 
     const writeStream = fs.createWriteStream(outputFile);
