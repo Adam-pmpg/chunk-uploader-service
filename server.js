@@ -1,7 +1,6 @@
 require('dotenv').config();
 
 const express = require('express');
-const cors = require('cors');
 const corsMiddleware = require('./middleware/corsMiddleware');
 const authenticateJWT = require('./middleware/authenticateJWT');
 const bodyParser = require('body-parser');
