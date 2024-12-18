@@ -1,9 +1,17 @@
 services:
   chunk-uploader-service:
+    user: "node"
     build: .
+    container_name: chunk-uploader-service
+    env_file:
+      - .env
     ports:
       - "${CHUNK_SERVICE_HOST_PORT}:${CHUNK_SERVICE_CONTAINER_PORT}"
     volumes:
       - .:/app
+      - /app/node_modules
       - ./chunks:/app/chunks
       - ./output:/app/output
+volumes:
+  chunks:
+  output:
