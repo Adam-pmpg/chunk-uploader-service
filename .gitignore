@@ -1,6 +1,6 @@
 node_modules/
 chunks/
-output/
+merged-files/
 .idea/
 .vscode/
 .idea/

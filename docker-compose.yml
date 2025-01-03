@@ -11,7 +11,7 @@ services:
       - .:/app
       - /app/node_modules
       - ./chunks:/app/chunks
-      - ./output:/app/output
+      - ./merged-files:/app/merged-files
 volumes:
   chunks:
-  output:
+  merged-files:

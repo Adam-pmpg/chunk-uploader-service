@@ -8,12 +8,12 @@ const router = express.Router();
 router.post('/:folderId', async (req, res) => {
     const folderId = req.params.folderId;
     const chunksDir = path.join(__dirname, '../chunks', folderId);
-    const outputDir = path.join(__dirname, '../output', folderId);
+    const mergedFilesDir = path.join(__dirname, '../merged-files', folderId);
     if (!fs.existsSync(chunksDir)) {
         return res.status(400).json({error:'Taki Folder nie istnieje.'});
     }
-    if (!fs.existsSync(outputDir)) {
-        fs.mkdirSync(outputDir);
+    if (!fs.existsSync(mergedFilesDir)) {
+        fs.mkdirSync(mergedFilesDir);
     }
     // Pobierz listę fragmentów, posortowaną po nazwie
     let files = fs.readdirSync(chunksDir)
@@ -31,9 +31,9 @@ router.post('/:folderId', async (req, res) => {
     // Parsuję nazwę pliku, bez chunk_0, chunk_1...
     const firstFile = files[0];
     const parsedFileName = firstFile.replace(/^chunk_000__/, '');
-    const outputFile = path.join(outputDir, `${parsedFileName}`);
+    const mergedFilesFile = path.join(mergedFilesDir, `${parsedFileName}`);
 
-    const writeStream = fs.createWriteStream(outputFile);
+    const writeStream = fs.createWriteStream(mergedFilesFile);
 
     writeStream.on('error', (error) => {
         res.status(500).json({error:'Błąd podczas scalania plików.'});
@@ -45,7 +45,7 @@ router.post('/:folderId', async (req, res) => {
             folderId,
             chunksDir,
             parsedFileName,
-            outputFile
+            mergedFilesFile
         });
     });
 

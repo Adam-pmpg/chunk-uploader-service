@@ -6,7 +6,7 @@ const router = express.Router();
 
 // Ścieżki do folderów, które mają zostać wyczyszczone
 const chunksDir = path.join(__dirname, '../chunks');
-const outputDir = path.join(__dirname, '../output');
+const mergedFilesDir = path.join(__dirname, '../merged-files');
 
 // Funkcja do usuwania plików w folderze
 const clearFolder = (dir) => {
@@ -61,8 +61,8 @@ const clearFolder = (dir) => {
 
 // Routing dla endpointu /clear-chunk
 router.delete('/', (req, res) => {
-    // Czyścimy foldery chunks i output
-    Promise.all([clearFolder(chunksDir), clearFolder(outputDir)])
+    // Czyścimy foldery chunks i merged-files
+    Promise.all([clearFolder(chunksDir), clearFolder(mergedFilesDir)])
         .then(results => {
             res.status(200).send({
                 message: 'Foldery zostały wyczyszczone',

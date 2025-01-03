@@ -1,12 +1,12 @@
 #!/bin/bash
 
 # Tworzenie katalogów, jeśli nie istnieją
-mkdir -p /app/chunks /app/output
+mkdir -p /app/chunks /app/merged-files
 
 # Sprawdzamy, czy mamy uprawnienia do zmiany właściciela
 if [ "$(id -u)" -eq 0 ]; then
   # Ustawiamy właściciela na użytkownika 'node'
-  chown -R node:node /app/chunks /app/output
+  chown -R node:node /app/chunks /app/merged-files
 fi
 
 # Uruchamiamy aplikację jako 'node'
