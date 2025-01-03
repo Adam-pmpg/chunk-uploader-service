@@ -31,9 +31,9 @@ router.post('/:folderId', async (req, res) => {
     // Parsuję nazwę pliku, bez chunk_0, chunk_1...
     const firstFile = files[0];
     const parsedFileName = firstFile.replace(/^chunk_000__/, '');
-    const mergedFilesFile = path.join(mergedFilesDir, `${parsedFileName}`);
+    const mergedFile = path.join(mergedFilesDir, `${parsedFileName}`);
 
-    const writeStream = fs.createWriteStream(mergedFilesFile);
+    const writeStream = fs.createWriteStream(mergedFile);
 
     writeStream.on('error', (error) => {
         res.status(500).json({error:'Błąd podczas scalania plików.'});
@@ -45,7 +45,7 @@ router.post('/:folderId', async (req, res) => {
             folderId,
             chunksDir,
             parsedFileName,
-            mergedFilesFile
+            mergedFile
         });
     });
 
