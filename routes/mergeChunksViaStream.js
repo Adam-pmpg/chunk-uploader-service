@@ -1,8 +1,11 @@
 const express = require('express');
 const fs = require('fs');
 const path = require('path');
+require('dotenv').config();
 
 const router = express.Router();
+
+const videoExtensions = process.env.CHUNK_SERVICE_VIDEO_EXTENSIONS.split(',');
 
 // Endpoint do scalania plików wideo
 router.post('/:folderId', async (req, res) => {
@@ -17,13 +20,12 @@ router.post('/:folderId', async (req, res) => {
     }
     // Pobierz listę fragmentów, posortowaną po nazwie
     let files = fs.readdirSync(chunksDir)
-        .filter(file => (file.startsWith('chunk_') && (file.endsWith('.mp4') || file.endsWith('.wmv'))))
+        .filter(file => file.startsWith('chunk_') && videoExtensions.some(ext => file.endsWith(ext)))
         .sort((a, b) => {
             const indexA = parseInt(a.split('_')[1].split('.')[0]);
             const indexB = parseInt(b.split('_')[1].split('.')[0]);
             return indexA - indexB;
         });
-
     if (files.length === 0) {
         return res.status(400).json({error:'Brak plików do scalenia.'});
     }
@@ -31,6 +33,7 @@ router.post('/:folderId', async (req, res) => {
     // Parsuję nazwę pliku, bez chunk_0, chunk_1...
     const firstFile = files[0];
     const parsedFileName = firstFile.replace(/^chunk_000__/, '');
+    const extensionFile = path.extname(parsedFileName).toLowerCase();
     const mergedFile = path.join(mergedFilesDir, `${parsedFileName}`);
 
     const writeStream = fs.createWriteStream(mergedFile);
@@ -45,7 +48,8 @@ router.post('/:folderId', async (req, res) => {
             folderId,
             chunksDir,
             parsedFileName,
-            mergedFile
+            mergedFile,
+            extensionFile,
         });
     });
 
