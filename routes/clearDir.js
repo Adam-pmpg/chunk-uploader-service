@@ -1,4 +1,3 @@
-// clearChunks.js
 const express = require('express');
 const fs = require('fs');
 const path = require('path');
@@ -59,7 +58,7 @@ const clearFolder = (dir) => {
     });
 };
 
-// Routing dla endpointu /clear-chunk
+// Endpoint do usuwania zawartości obu folderów
 router.delete('/', (req, res) => {
     // Czyścimy foldery chunks i merged-files
     Promise.all([clearFolder(chunksDir), clearFolder(mergedFilesDir)])
