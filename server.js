@@ -8,7 +8,7 @@ const bodyParser = require('body-parser');
 const authRoutes = require('./routes/authRoutes');
 const uploadRoute = require('./routes/upload');
 const mergeChunksViaStream = require('./routes/mergeChunksViaStream');
-const clearChunks = require('./routes/clearChunks');
+const clearDir = require('./routes/clearDir');
 
 const app = express();
 const port = process.env.CHUNK_SERVICE_HOST_PORT;
@@ -24,7 +24,7 @@ app.use('/auth', authRoutes);
 // Rejestracja trasy upload
 app.use('/video/upload', authenticateJWT, uploadRoute);
 app.use('/video/merge', authenticateJWT, mergeChunksViaStream);
-app.use('/video/clear-chunks', clearChunks);
+app.use('/video/clear', authenticateJWT, clearDir);
 app.get('/', (req, res) => {
     res.status(200).send();
 });
