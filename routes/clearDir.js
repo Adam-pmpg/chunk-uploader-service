@@ -76,5 +76,81 @@ router.delete('/', (req, res) => {
         });
 });
 
+// Endpoint do usuwania konkretnego folderu w "chunks"
+router.delete('/chunks/:dirName', (req, res) => {
+    const { dirName } = req.params;
+    const specificDir = path.join(chunksDir, dirName);
+
+    fs.access(specificDir, fs.constants.F_OK, (err) => {
+        if (err) {
+            return res.status(404).send({
+                message: `Pojedynczy folder ${dirName} nie istnieje w folderze chunks`,
+                error: err
+            });
+        }
+
+        clearFolder(specificDir)
+            .then(results => {
+                fs.rmdir(specificDir, (err) => {
+                    if (err) {
+                        return res.status(500).send({
+                            message: `Błąd podczas usuwania pojedynczego folderu ${dirName} w folderze chunks`,
+                            error: err
+                        });
+                    }
+
+                    res.status(200).send({
+                        message: `Pojedynczy podfolder ${dirName}, w folderze chunks, został usunięty`,
+                        details: results
+                    });
+                });
+            })
+            .catch(error => {
+                res.status(500).send({
+                    message: `Wystąpił błąd podczas usuwania zawartości pojedynczego podfolderu ${dirName}, w folderze chunks`,
+                    error: error
+                });
+            });
+    });
+});
+
+// Endpoint do usuwania konkretnego podfolderu folderu w "merged-files"
+router.delete('/merged-files/:dirName', (req, res) => {
+    const { dirName } = req.params;
+    const specificDir = path.join(mergedFilesDir, dirName);
+
+    fs.access(specificDir, fs.constants.F_OK, (err) => {
+        if (err) {
+            return res.status(404).send({
+                message: `Folder ${dirName} nie istnieje w merged-files`,
+                error: err
+            });
+        }
+
+        clearFolder(specificDir)
+            .then(results => {
+                fs.rmdir(specificDir, (err) => {
+                    if (err) {
+                        return res.status(500).send({
+                            message: `Błąd podczas usuwania folderu ${dirName} w merged-files`,
+                            error: err
+                        });
+                    }
+
+                    res.status(200).send({
+                        message: `Folder ${dirName} w merged-files został usunięty`,
+                        details: results
+                    });
+                });
+            })
+            .catch(error => {
+                res.status(500).send({
+                    message: `Wystąpił błąd podczas usuwania zawartości folderu ${dirName} w merged-files`,
+                    error: error
+                });
+            });
+    });
+});
+
 // Eksportujemy router do użycia w pliku głównym
 module.exports = router;
