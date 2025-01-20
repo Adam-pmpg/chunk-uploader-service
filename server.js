@@ -29,7 +29,7 @@ app.get('/', (req, res) => {
     res.status(200).send();
 });
 app.get('/about', (req, res) => {
-    res.send('<p>Video API, version 1.0</p>');
+    res.status(200).json({ message: 'chunk uploader service version 1.0' });
 });
 
 // Globalny handler błędów CORS
