@@ -1,6 +1,5 @@
 services:
-  chunk-uploader-service:
-    user: "node"
+  chunk-uploader-service:    
     build: .
     container_name: chunk-uploader-service
     env_file:
