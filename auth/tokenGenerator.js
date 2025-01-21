@@ -9,8 +9,8 @@ function generateToken(user) {
         // inne dane użytkownika
     };
 
-    const secretKey = process.env.JWT_SECRET_KEY;
-    const expirationTime = process.env.JWT_EXPIRATION || "20m";
+    const secretKey = process.env.CHUNK_SERVICE_JWT_SECRET_KEY;
+    const expirationTime = process.env.CHUNK_SERVICE_JWT_EXPIRATION || "20m";
     const token = jwt.sign(payload, secretKey, { expiresIn: expirationTime });
 
     return token;
